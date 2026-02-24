@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Planejamento 2026 - Impressão Horizontal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAF9F6;
+            color: #333333;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border: 2px solid #000;
+        }
+        
+        .day-cell {
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            padding: 0.4rem;
+            border: 1px solid #000;
+            background-color: white;
+        }
+
+        .academic-input {
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            font-size: 0.75rem;
+            padding: 2px 0;
+            outline: none;
+            background: transparent;
+        }
+
+        .academic-input:focus {
+            border-bottom-color: #6366f1;
+        }
+
+        .lesson-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 2px;
+            margin-top: 6px;
+        }
+
+        .lesson-box {
+            font-size: 0.6rem;
+            text-align: center;
+            border: 1px solid #000;
+            padding: 1px 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .lesson-box.active {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* Estilos de Impressão A4 Horizontal */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0.5cm;
+            }
+            
+            body {
+                background-color: white !important;
+            }
+
+            nav, .no-print, .intro-text, #view-analytics {
+                display: none !important;
+            }
+
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+
+            .calendar-container {
+                width: 100% !important;
+            }
+
+            .day-cell {
+                height: 105px; 
+                border: 1.5px solid #000 !important;
+            }
+
+            .input-group-print {
+                display: flex;
+                gap: 10px;
+            }
+
+            .academic-input {
+                border-bottom: 1px solid #000 !important;
+            }
+            
+            input::placeholder {
+                color: transparent;
+            }
+
+            h2 {
+                margin-top: 0 !important;
+                font-size: 1.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-indigo-600">Plan 2026</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.print()" class="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition">
+                        Imprimir A4 Horizontal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-[95%] mx-auto px-4 py-8 w-full">
+
+        <div class="mb-6 intro-text">
+            <h1 class="text-3xl font-bold text-gray-900">Planejamento Acadêmico 2026</h1>
+            <p class="mt-2 text-gray-600">Configurado para <b>A4 Horizontal</b>. Apenas dias úteis possuem campos de preenchimento.</p>
+        </div>
+
+        <div id="view-dashboard">
+            <div class="calendar-container bg-white shadow-sm print:shadow-none">
+                <div class="flex items-center justify-between mb-4 no-print px-4 pt-4">
+                    <button onclick="changeMonth(-1)" class="p-2 hover:bg-gray-100 rounded-full font-bold">&larr;</button>
+                    <h2 id="current-month-label" class="text-xl font-bold capitalize">Janeiro 2026</h2>
+                    <button onclick="changeMonth(1)" class="p-2 hover:bg-gray-100 rounded-full font-bold">&rarr;</button>
+                </div>
+                
+                <h2 class="hidden print:block text-center font-bold text-xl mb-2" id="print-month-label">Janeiro 2026</h2>
+
+                <div class="grid grid-cols-7 text-center font-bold text-xs border-x border-t border-black bg-gray-100 print:bg-white">
+                    <div class="py-1 border-r border-black">DOM</div>
+                    <div class="py-1 border-r border-black">SEG</div>
+                    <div class="py-1 border-r border-black">TER</div>
+                    <div class="py-1 border-r border-black">QUA</div>
+                    <div class="py-1 border-r border-black">QUI</div>
+                    <div class="py-1 border-r border-black">SEX</div>
+                    <div class="py-1 border-black">SÁB</div>
+                </div>
+
+                <div id="calendar-grid" class="calendar-grid">
+                    <!-- Gerado dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        const holidays2026 = [
+            { date: '2026-01-01', name: 'Ano Novo' },
+            { date: '2026-02-17', name: 'Carnaval' },
+            { date: '2026-04-03', name: 'Paixão' },
+            { date: '2026-04-21', name: 'Tiradentes' },
+            { date: '2026-05-01', name: 'Trabalho' },
+            { date: '2026-06-04', name: 'Corpus' },
+            { date: '2026-09-07', name: 'Independência' },
+            { date: '2026-10-12', name: 'Aparecida' },
+            { date: '2026-11-02', name: 'Finados' },
+            { date: '2026-11-15', name: 'República' },
+            { date: '2026-11-20', name: 'C. Negra' },
+            { date: '2026-12-25', name: 'Natal' }
+        ];
+
+        let currentState = { year: 2026, month: 0 };
+
+        function toggleLesson(element) {
+            element.classList.toggle('active');
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            const label = `${months[currentState.month]} ${currentState.year}`;
+            document.getElementById('current-month-label').textContent = label;
+            document.getElementById('print-month-label').textContent = label;
+
+            const firstDay = new Date(2026, currentState.month, 1).getDay();
+            const daysInMonth = new Date(2026, currentState.month + 1, 0).getDate();
+
+            // Espaços vazios
+            for (let i = 0; i < firstDay; i++) {
+                grid.innerHTML += `<div class="day-cell bg-gray-50 border border-black"></div>`;
+            }
+
+            // Dias do mês
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(2026, currentState.month, day);
+                const dayOfWeek = dateObj.getDay(); // 0 = Dom, 6 = Sáb
+                const dateStr = `2026-${String(currentState.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const holiday = holidays2026.find(h => h.date === dateStr);
+                
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                const isNonWorkingDay = isWeekend || holiday;
+
+                let cellHtml = `
+                    <div class="day-cell ${isNonWorkingDay ? 'bg-gray-100' : ''}">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-bold text-sm leading-none ${isNonWorkingDay ? 'text-gray-600' : ''}">${day}</span>
+                            ${holiday ? `<span class="text-[7px] font-bold text-gray-500 uppercase text-right leading-none">${holiday.name}</span>` : ''}
+                        </div>
+                `;
+
+                // Adiciona campos apenas se não for final de semana nem feriado
+                if (!isNonWorkingDay) {
+                    cellHtml += `
+                        <div class="input-group-print space-y-1 sm:space-y-0 mt-1">
+                            <div class="flex flex-col flex-1">
+                                <span class="text-[8px] font-semibold text-gray-500 uppercase">Professor</span>
+                                <input type="text" class="academic-input" placeholder="Nome...">
+                            </div>
+                            <div class="flex flex-col flex-1">
+                                <span class="text-[8px] font-semibold text-gray-500 uppercase">Disciplina</span>
+                                <input type="text" class="academic-input" placeholder="Matéria...">
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[8px] font-bold text-gray-400 uppercase">Aula</span>
+                                <div class="lesson-selector flex-1 ml-2">
+                                    <div class="lesson-box" onclick="toggleLesson(this)">1</div>
+                                    <div class="lesson-box" onclick="toggleLesson(this)">2</div>
+                                    <div class="lesson-box" onclick="toggleLesson(this)">3</div>
+                                    <div class="lesson-box" onclick="toggleLesson(this)">4</div>
+                                    <div class="lesson-box" onclick="toggleLesson(this)">5</div>
+                                    <div class="lesson-box" onclick="toggleLesson(this)">6</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                cellHtml += `</div>`;
+                grid.innerHTML += cellHtml;
+            }
+        }
+
+        function changeMonth(delta) {
+            currentState.month = (currentState.month + delta + 12) % 12;
+            renderCalendar();
+        }
+
+        window.onload = renderCalendar;
+    </script>
+</body>
+</html>
