@@ -14,9 +14,10 @@
             color: #333333;
         }
 
+        /* Ajuste: Sábado e Domingo (0.3fr) representam 30% da largura dos dias úteis (1fr) */
         .calendar-grid {
             display: grid;
-            grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+            grid-template-columns: 0.3fr 1fr 1fr 1fr 1fr 1fr 0.3fr;
             border: 2px solid #000;
         }
         
@@ -102,9 +103,10 @@
             pointer-events: none;
         }
 
+        /* Ajuste: Cabeçalho seguindo a mesma proporção de 30% para fins de semana */
         .header-grid {
             display: grid;
-            grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
+            grid-template-columns: 0.3fr 1fr 1fr 1fr 1fr 1fr 0.3fr;
             text-align: center;
             font-weight: bold;
             font-size: 10px;
@@ -124,6 +126,8 @@
             .day-blocked .content-to-hide { display: none !important; }
             .day-blocked { background-color: #eee !important; -webkit-print-color-adjust: exact; }
             .header-grid { background-color: #fff !important; }
+            /* Esconder texto longo em células estreitas na impressão se necessário */
+            .is-weekend .mt-auto { font-size: 6px; }
         }
     </style>
 </head>
@@ -133,7 +137,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <div class="flex items-center space-x-4">
-                    <!-- Logo Section - LINK CORRIGIDO PARA RAW -->
                     <div class="flex items-center space-x-3">
                         <img id="main-logo" 
                              src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" 
@@ -169,7 +172,6 @@
                 <button onclick="changeMonth(1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold text-xl">&rarr;</button>
             </div>
             
-            <!-- Logo para Impressão - LINK CORRIGIDO PARA RAW -->
             <div class="hidden print:flex justify-between items-center mb-4 px-4 pt-2">
                 <div class="flex items-center gap-4">
                     <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" 
@@ -274,12 +276,12 @@
                          onclick="toggleBlock('${dateStr}')">
                         <div class="flex justify-between items-start mb-1">
                             <span class="font-bold text-sm ${isWeekend ? 'text-gray-400' : ''}">${day}</span>
-                            ${event ? `<span class="text-[5.5px] font-black text-indigo-700 uppercase text-right leading-none max-w-[90%]">${event.name}</span>` : ''}
+                            ${event ? `<span class="text-[5px] font-black text-indigo-700 uppercase text-right leading-none max-w-[90%]">${event.name}</span>` : ''}
                         </div>
                 `;
 
                 if (isBlocked) {
-                    cellHtml += `<div class="lock-indicator"><svg class="w-8 h-8 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" /></svg></div>`;
+                    cellHtml += `<div class="lock-indicator"><svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" /></svg></div>`;
                 } else if (!isWeekend) {
                     for (let cardNum = 1; cardNum <= 2; cardNum++) {
                         cellHtml += `
@@ -309,7 +311,7 @@
                         `;
                     }
                 } else {
-                   cellHtml += `<div class="mt-auto text-center text-[7px] font-bold text-gray-300 uppercase">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
+                   cellHtml += `<div class="mt-auto text-center text-[6px] font-bold text-gray-300 uppercase">${dayOfWeek === 0 ? 'DOM' : 'SÁB'}</div>`;
                 }
 
                 cellHtml += `</div>`;
