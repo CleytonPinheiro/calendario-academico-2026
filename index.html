@@ -16,17 +16,29 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
             color: #1e293b;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Container que força o preenchimento vertical */
+        .calendar-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: 0.35fr 1fr 1fr 1fr 1fr 1fr 0.35fr;
             border: 1.5px solid var(--print-black);
-            border-top: none; /* Evita borda dupla com o cabeçalho */
+            border-top: none;
+            flex-grow: 1; /* Faz o grid crescer para ocupar o espaço disponível */
         }
         
         .day-cell {
-            min-height: 160px;
+            min-height: 180px; /* Aumentado para preencher melhor a vertical */
             display: flex;
             flex-direction: column;
             padding: 0.25rem;
@@ -49,7 +61,7 @@
         }
 
         .label-text {
-            font-size: 5.5px;
+            font-size: 5.2px;
             font-weight: 900;
             color: #000;
             text-transform: uppercase;
@@ -61,9 +73,9 @@
         .check-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 3px;
-            margin-top: 3px;
-            row-gap: 2px;
+            gap: 2.5px;
+            margin-top: 2px;
+            row-gap: 1.5px;
         }
 
         .check-item {
@@ -76,8 +88,8 @@
 
         .check-box-ui {
             border: 1px solid #000;
-            width: 9px;
-            height: 9px;
+            width: 8.5px;
+            height: 8.5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,7 +103,7 @@
         .check-box-ui.active::after {
             content: '✓';
             color: white;
-            font-size: 7px;
+            font-size: 6.5px;
             font-weight: bold;
         }
 
@@ -105,9 +117,9 @@
         .lesson-circle {
             border: 1px solid #000;
             border-radius: 50%;
-            width: 11px;
-            height: 11px;
-            font-size: 6.5px;
+            width: 10px;
+            height: 10px;
+            font-size: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -143,16 +155,20 @@
             text-align: center;
             font-weight: 900;
             font-size: 9px;
-            background-color: #f8fafc; /* Fundo cinza bem claro */
-            color: #000; /* Texto em preto */
+            background-color: #ffffff;
+            color: #000;
             border: 1.5px solid var(--print-black);
-            border-bottom: 2px solid var(--print-black);
+            border-bottom: 2.5px solid var(--print-black);
         }
 
         .card-container {
-            border-top: 1px dashed #eee;
+            border-top: 1px dashed #ddd;
             padding-top: 2px;
             margin-top: 2px;
+            flex-grow: 1; /* Faz os blocos de planejamento distribuírem o espaço */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .card-container:first-child {
             border-top: none;
@@ -165,13 +181,34 @@
                 size: A4 portrait; 
                 margin: 0.4cm; 
             }
-            body { background: white; }
+            html, body {
+                height: 100%;
+            }
             nav, .no-print { display: none !important; }
-            main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
-            .calendar-container { box-shadow: none !important; border: none !important; }
+            main { 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                max-width: 100% !important;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .calendar-wrapper {
+                height: 100%;
+            }
+            .calendar-container { 
+                box-shadow: none !important; 
+                border: none !important;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .calendar-grid {
+                height: 100%;
+            }
             .day-cell { 
-                min-height: 154px !important; 
-                height: 154px !important;
+                min-height: auto !important;
+                flex: 1; /* Distribui a altura igualmente entre as semanas */
                 break-inside: avoid; 
                 overflow: hidden;
             }
@@ -208,31 +245,48 @@
 
     <main class="flex-grow max-w-[1100px] mx-auto py-2 w-full px-4 print:p-0 print:max-w-full">
         
-        <div class="hidden print:flex justify-between items-end mb-1 px-1">
-            <div class="flex items-center gap-2">
-                <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-10 w-auto">
-                <div>
-                    <h1 class="font-black text-md uppercase leading-none">C.E. Tânia Varella</h1>
-                    <p class="text-[6px] font-bold text-gray-400 uppercase">SEED/PR - Gestão Acadêmica 2026</p>
+        <div class="calendar-wrapper">
+            <!-- Aviso Instrucional -->
+            <div class="no-print mb-4 bg-indigo-50 border-l-4 border-indigo-500 p-3 rounded-r-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-xs text-indigo-700 font-medium">
+                            <span class="font-bold">Dica de Uso:</span> Clique diretamente sobre o número do dia ou em qualquer área livre da célula para <span class="font-bold">bloquear/desbloquear</span> datas (feriados ou eventos). Dias bloqueados ocultam os campos de escrita para facilitar a visualização.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <h2 id="print-month-label" class="font-black text-lg uppercase">Fevereiro 2026</h2>
-        </div>
 
-        <div class="calendar-container bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 print:border-0 print:shadow-none">
-            
-            <!-- Cabeçalho agora com fundo claro e bordas sólidas -->
-            <div class="header-grid py-1.5">
-                <div class="border-r border-black">DOM</div>
-                <div class="border-r border-black">SEG</div>
-                <div class="border-r border-black">TER</div>
-                <div class="border-r border-black">QUA</div>
-                <div class="border-r border-black">QUI</div>
-                <div class="border-r border-black">SEX</div>
-                <div>SÁB</div>
+            <div class="hidden print:flex justify-between items-end mb-1 px-1">
+                <div class="flex items-center gap-2">
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-10 w-auto">
+                    <div>
+                        <h1 class="font-black text-md uppercase leading-none">C.E. Tânia Varella</h1>
+                        <p class="text-[6px] font-bold text-gray-400 uppercase">SEED/PR - Gestão Acadêmica 2026</p>
+                    </div>
+                </div>
+                <h2 id="print-month-label" class="font-black text-lg uppercase">Fevereiro 2026</h2>
             </div>
 
-            <div id="calendar-grid" class="calendar-grid"></div>
+            <div class="calendar-container bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 flex flex-col print:border-0 print:shadow-none flex-grow">
+                
+                <div class="header-grid py-1.5">
+                    <div class="border-r border-black">DOM</div>
+                    <div class="border-r border-black">SEG</div>
+                    <div class="border-r border-black">TER</div>
+                    <div class="border-r border-black">QUA</div>
+                    <div class="border-r border-black">QUI</div>
+                    <div class="border-r border-black">SEX</div>
+                    <div>SÁB</div>
+                </div>
+
+                <div id="calendar-grid" class="calendar-grid"></div>
+            </div>
         </div>
     </main>
 
@@ -315,7 +369,7 @@
                 if (isBlocked) {
                     cellHtml += `<div class="lock-icon"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" /></svg></div>`;
                 } else if (!isWeekend) {
-                    for (let b = 1; b <= 2; b++) {
+                    for (let b = 1; b <= 3; b++) {
                         const bId = `${dateStr}-b${b}`;
                         cellHtml += `
                             <div class="card-container content-to-hide">
@@ -332,7 +386,7 @@
                                     ${['AV40', 'AV60', 'REC', 'REC 40', 'REC 60'].map(l => `
                                         <div class="check-item" onclick="toggleMarker('${bId}', '${l}')">
                                             <div class="check-box-ui ${appState[bId+'-'+l] ? 'active' : ''}"></div>
-                                            <span class="text-[5.5px] font-black">${l}</span>
+                                            <span class="text-[5px] font-black">${l}</span>
                                         </div>`).join('')}
                                 </div>
                             </div>
