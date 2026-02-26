@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Planejamento 2026 - SEED PR</title>
+    <title>Painel de Planejamento 2026 - Tânia Varella</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -14,7 +14,7 @@
             color: #333333;
         }
 
-        /* Configuração do Grid: Fins de semana ocupam 0.5 da largura dos dias úteis */
+        /* Grid adaptável para fins de semana */
         .calendar-grid {
             display: grid;
             grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
@@ -22,7 +22,7 @@
         }
         
         .day-cell {
-            min-height: 210px;
+            min-height: 215px;
             display: flex;
             flex-direction: column;
             padding: 0.35rem;
@@ -45,7 +45,7 @@
         }
 
         .label-text {
-            font-size: 5px;
+            font-size: 5.5px;
             font-weight: 800;
             color: #444;
             text-transform: uppercase;
@@ -74,7 +74,7 @@
             gap: 1.5px;
             flex-wrap: wrap;
             justify-content: flex-end;
-            max-width: 45px;
+            max-width: 42px;
         }
 
         .lesson-circle {
@@ -89,7 +89,7 @@
             font-weight: bold;
         }
 
-        /* Estilo para dias bloqueados (não letivos) */
+        /* Estilo para dias bloqueados */
         .day-blocked {
             background-color: #f1f1f1 !important;
             background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(0,0,0,0.02) 15px, rgba(0,0,0,0.02) 30px);
@@ -122,7 +122,7 @@
             }
             nav, .no-print { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
-            .day-cell { height: 210px !important; border: 1.5px solid #000 !important; overflow: hidden; }
+            .day-cell { height: 215px !important; border: 1.5px solid #000 !important; overflow: hidden; }
             .day-blocked .content-to-hide { display: none !important; }
             .day-blocked { background-color: #eee !important; -webkit-print-color-adjust: exact; }
             .header-grid { background-color: #fff !important; }
@@ -131,18 +131,27 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
+    <!-- Menu Superior com Logo -->
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <div class="flex justify-between h-20">
+                <div class="flex items-center space-x-4">
+                    <!-- Logo do Colégio Tânia Varella -->
+                    <div class="flex items-center space-x-3">
+                        <img src="Gemini_Generated_Image_50jdyb50jdyb50jd.jpg" 
+                             alt="Logo Colégio Estadual Tânia Varella" 
+                             class="h-16 w-auto object-contain"
+                             onerror="this.style.display='none';">
+                        <div class="h-10 w-[1px] bg-gray-300"></div>
+                        <div class="flex flex-col">
+                            <span class="text-lg font-black text-gray-900 leading-tight">PLANEJAMENTO 2026</span>
+                            <span class="text-xs font-semibold text-indigo-600 tracking-widest uppercase">SEED-PR Digital</span>
+                        </div>
                     </div>
-                    <span class="text-xl font-bold text-gray-800">SEED-PR 2026 <span class="text-indigo-600">Digital</span></span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-bold shadow-sm transition-all flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         IMPRIMIR A4
                     </button>
                 </div>
@@ -153,6 +162,7 @@
     <main class="flex-grow max-w-[99%] mx-auto py-4 w-full px-2">
         <div class="calendar-container bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200 print:border-0 print:shadow-none">
             
+            <!-- Controle de Mês -->
             <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-4">
                 <button onclick="changeMonth(-1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold text-xl">&larr;</button>
                 <div class="text-center">
@@ -161,8 +171,17 @@
                 <button onclick="changeMonth(1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold text-xl">&rarr;</button>
             </div>
             
-            <h2 class="hidden print:block text-center font-black text-3xl mb-4 text-black uppercase" id="print-month-label">Fevereiro 2026</h2>
+            <!-- Logo para Impressão -->
+            <div class="hidden print:flex justify-between items-center mb-4 px-4">
+                <div class="flex items-center gap-4">
+                    <img src="Gemini_Generated_Image_50jdyb50jdyb50jd.jpg" alt="Logo" class="h-12 w-auto">
+                    <div class="font-black text-xl uppercase tracking-tighter">C.E. Tânia Varella</div>
+                </div>
+                <h2 class="text-center font-black text-2xl text-black uppercase" id="print-month-label">Fevereiro 2026</h2>
+                <div class="text-[10px] font-bold text-right">REGISTRO DE CLASSE<br>ANO LETIVO 2026</div>
+            </div>
 
+            <!-- Cabeçalho dos Dias -->
             <div class="header-grid font-bold text-[10px] print:bg-white">
                 <div class="py-2 border-r border-black">DOM</div>
                 <div class="py-2 border-r border-black">SEG</div>
@@ -179,46 +198,38 @@
 
     <script>
         const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        
+        // Eventos baseados no Calendário SEED-PR 2026 oficial
         const schoolEvents = [
             { date: '2026-01-01', name: 'Ano Novo', type: 'holiday' },
             { date: '2026-02-02', name: 'Estudo e Planejamento', type: 'planning' },
             { date: '2026-02-03', name: 'Estudo e Planejamento', type: 'planning' },
-            { date: '2026-02-04', name: 'Início do 1º Trim.', type: 'term' },
+            { date: '2026-02-04', name: 'Início 1º Trim.', type: 'term' },
             { date: '2026-02-05', name: 'Início das Aulas', type: 'term' },
-            { date: '2026-02-16', name: 'Recesso Escolar', type: 'recess' },
-            { date: '2026-02-17', name: 'Feriado: Carnaval', type: 'holiday' },
-            { date: '2026-02-18', name: 'Recesso: Cinzas', type: 'recess' },
-            { date: '2026-04-03', name: 'Paixão de Cristo', type: 'holiday' },
+            { date: '2026-02-16', name: 'Recesso', type: 'recess' },
+            { date: '2026-02-17', name: 'Carnaval', type: 'holiday' },
+            { date: '2026-02-18', name: 'Cinzas', type: 'recess' },
+            { date: '2026-04-03', name: 'Paixão', type: 'holiday' },
             { date: '2026-04-05', name: 'Páscoa', type: 'holiday' },
-            { date: '2026-04-20', name: 'Recesso', type: 'recess' },
-            { date: '2026-04-21', name: 'Feriado: Tiradentes', type: 'holiday' },
+            { date: '2026-04-21', name: 'Tiradentes', type: 'holiday' },
             { date: '2026-05-01', name: 'Dia do Trabalho', type: 'holiday' },
-            { date: '2026-05-14', name: 'Término 1º Trim.', type: 'term' },
-            { date: '2026-05-15', name: 'Estudo e Planejamento', type: 'planning' },
-            { date: '2026-05-18', name: 'Início 2º Trim.', type: 'term' },
-            { date: '2026-06-04', name: 'Feriado: Corpus Christi', type: 'holiday' },
-            { date: '2026-06-05', name: 'Recesso', type: 'recess' },
-            { date: '2026-07-13', name: 'Recesso Julho', type: 'recess' },
-            { date: '2026-07-24', name: 'Fim Recesso Julho', type: 'recess' },
-            { date: '2026-07-27', name: 'Estudo e Planejamento', type: 'planning' },
-            { date: '2026-09-04', name: 'Término 2º Trim.', type: 'term' },
+            { date: '2026-06-04', name: 'Corpus Christi', type: 'holiday' },
             { date: '2026-09-07', name: 'Independência', type: 'holiday' },
-            { date: '2026-09-08', name: 'Início 3º Trim.', type: 'term' },
             { date: '2026-10-12', name: 'N. Sra Aparecida', type: 'holiday' },
-            { date: '2026-10-13', name: 'Dia do Professor (Ant.)', type: 'holiday' },
-            { date: '2026-11-02', name: 'Feriado: Finados', type: 'holiday' },
-            { date: '2026-11-15', name: 'Proc. República', type: 'holiday' },
+            { date: '2026-10-13', name: 'Dia do Professor', type: 'holiday' }, // Antecipado conforme PDF
+            { date: '2026-11-02', name: 'Finados', type: 'holiday' },
+            { date: '2026-11-15', name: 'Proclamação', type: 'holiday' },
             { date: '2026-11-20', name: 'Consciência Negra', type: 'holiday' },
-            { date: '2026-12-18', name: 'Término das Aulas', type: 'term' },
-            { date: '2026-12-21', name: 'Fechamento Escolar', type: 'closing' },
+            { date: '2026-12-18', name: 'Término Aulas', type: 'term' },
             { date: '2026-12-25', name: 'Natal', type: 'holiday' }
         ];
 
         let blockedDays = new Set();
-        let currentState = { year: 2026, month: 1 };
+        let currentState = { year: 2026, month: 1 }; // Inicia em Fevereiro
 
+        // Inicialização dos bloqueios oficiais
         schoolEvents.forEach(e => {
-            if (['holiday', 'recess', 'planning', 'closing'].includes(e.type)) {
+            if (['holiday', 'recess', 'planning'].includes(e.type)) {
                 blockedDays.add(e.date);
             }
         });
@@ -243,6 +254,7 @@
             const firstDay = new Date(currentState.year, currentState.month, 1).getDay();
             const daysInMonth = new Date(currentState.year, currentState.month + 1, 0).getDate();
 
+            // Espaços vazios
             for (let i = 0; i < firstDay; i++) {
                 grid.innerHTML += `<div class="day-cell bg-gray-50 border border-black"></div>`;
             }
@@ -274,11 +286,11 @@
                             <div class="content-to-hide mt-1 border-t border-dotted border-gray-300 pt-1 first:border-0 first:mt-0">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-grow">
-                                        <div class="flex items-end mb-[1.5px]">
+                                        <div class="flex items-end mb-[1px]">
                                             <span class="label-text">PROF:</span>
                                             <div class="academic-row flex-grow"></div>
                                         </div>
-                                        <div class="flex items-end mb-[1.5px]">
+                                        <div class="flex items-end mb-[1px]">
                                             <span class="label-text">DISC:</span>
                                             <div class="academic-row flex-grow"></div>
                                         </div>
@@ -289,9 +301,9 @@
                                     </div>
                                 </div>
                                 <div class="check-group">
-                                    <div><span class="check-box"></span><span class="text-[5px] font-bold">AV40</span></div>
-                                    <div><span class="check-box"></span><span class="text-[5px] font-bold">AV60</span></div>
-                                    <div><span class="check-box"></span><span class="text-[5px] font-bold">REC</span></div>
+                                    <div><span class="check-box"></span><span class="text-[5.5px] font-bold">AV40</span></div>
+                                    <div><span class="check-box"></span><span class="text-[5.5px] font-bold">AV60</span></div>
+                                    <div><span class="check-box"></span><span class="text-[5.5px] font-bold">REC</span></div>
                                 </div>
                             </div>
                         `;
