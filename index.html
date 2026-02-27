@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #FAF9F6;
@@ -23,9 +24,9 @@
             border: 2px solid #000;
             flex-grow: 1;
         }
-        
+
         .day-cell {
-            min-height: 100px; 
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             padding: 4px;
@@ -53,7 +54,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2px;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         .check-item {
@@ -76,18 +77,19 @@
         }
 
         .lesson-dots {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5px;
-            margin-left: 4px;
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 4px 0;
+            width: 100%;
         }
 
         .lesson-circle {
             border: 1.2px solid #000;
             border-radius: 50%;
-            width: 11px;
-            height: 11px;
-            font-size: 0.55rem;
+            width: 12px;
+            height: 12px;
+            font-size: 0.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -96,7 +98,19 @@
 
         .day-blocked {
             background-color: #f1f1f1 !important;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.05) 10px, rgba(0, 0, 0, 0.05) 20px);
+        }
+
+        /* Estado "Modo Limpo" */
+        .clean-mode .academic-data,
+        .clean-mode .day-blocked {
+            display: none !important;
+        }
+
+        .clean-mode .day-cell {
+            background-image: none !important;
+            background-color: white !important;
+            min-height: 120px;
         }
 
         .header-grid {
@@ -112,26 +126,31 @@
 
         /* Configurações Dinâmicas de Impressão */
         @media print {
-            nav, .no-print { display: none !important; }
-            
-            body, html { 
+
+            nav,
+            .no-print {
+                display: none !important;
+            }
+
+            body,
+            html {
                 height: 100vh;
-                background-color: white; 
+                background-color: white;
                 overflow: hidden;
             }
 
-            main { 
-                padding: 0 !important; 
-                margin: 0 !important; 
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
                 width: 100% !important;
                 height: 100% !important;
                 display: flex;
                 flex-direction: column;
             }
 
-            .calendar-container { 
-                border: none !important; 
-                box-shadow: none !important; 
+            .calendar-container {
+                border: none !important;
+                box-shadow: none !important;
                 border-radius: 0 !important;
                 height: 100% !important;
                 width: 100% !important;
@@ -144,44 +163,76 @@
                 grid-auto-rows: 1fr;
             }
 
-            .day-cell { 
+            .day-cell {
                 height: auto !important;
                 min-height: 0 !important;
-                border: 1px solid #000 !important; 
+                border: 1px solid #000 !important;
                 -webkit-print-color-adjust: exact;
                 page-break-inside: avoid;
             }
 
-            .header-grid { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-            .day-blocked { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-        }
+            .header-grid {
+                background-color: #eee !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-        /* Classes de Orientação */
-        .print-landscape { size: A4 landscape; margin: 4mm; }
-        .print-portrait { size: A4 portrait; margin: 4mm; }
+            .day-blocked {
+                background-color: #eee !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            /* Garante que o modo limpo oculte o que deve na impressão */
+            .clean-mode .academic-data {
+                display: none !important;
+            }
+        }
     </style>
 </head>
+
 <body class="flex flex-col min-h-screen">
 
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-4">
-                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" 
-                         alt="Logo" class="h-10 w-auto">
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png"
+                        alt="Logo" class="h-10 w-auto">
                     <div class="flex flex-col">
                         <span class="text-md font-black text-gray-900 leading-tight uppercase">Planejamento 2026</span>
-                        <span class="text-[10px] font-semibold text-indigo-600 tracking-widest uppercase">Professor & Disciplina Explicitos</span>
+                        <span class="text-[10px] font-semibold text-indigo-600 tracking-widest uppercase">Tânia
+                            Varella</span>
                     </div>
                 </div>
+
                 <div class="flex items-center space-x-2">
-                    <button onclick="printLayout('landscape')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        IMPRIMIR PAISAGEM
+                    <!-- Toggle Modo Limpo -->
+                    <button id="clean-toggle" onclick="toggleCleanMode()"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded-lg text-xs font-bold border border-gray-300 flex items-center gap-2 transition-all">
+                        <svg id="clean-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                            </path>
+                        </svg>
+                        <span id="clean-text">MODO APENAS DIAS</span>
                     </button>
-                    <button onclick="printLayout('portrait')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        IMPRIMIR VERTICAL
+
+                    <button onclick="printLayout('landscape')"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                            </path>
+                        </svg>
+                        PAISAGEM
+                    </button>
+                    <button onclick="printLayout('portrait')"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                            </path>
+                        </svg>
+                        VERTICAL
                     </button>
                 </div>
             </div>
@@ -189,26 +240,33 @@
     </nav>
 
     <main class="flex-grow py-4 w-full px-4 print:px-0 print:py-0">
-        <div class="calendar-container bg-white shadow-xl border border-gray-200 print:border-0 print:shadow-none">
-            
+        <div id="calendar-container"
+            class="calendar-container bg-white shadow-xl border border-gray-200 print:border-0 print:shadow-none">
+
             <!-- Cabeçalho de Impressão -->
             <div class="hidden print:flex justify-between items-center px-2 py-1 border-b-2 border-black">
                 <div class="flex items-center gap-2">
-                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-8 w-auto">
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png"
+                        class="h-8 w-auto">
                     <div class="font-black text-sm uppercase leading-none">C.E. Tânia Varella</div>
                 </div>
                 <h2 class="font-black text-lg uppercase" id="print-month-label">Fevereiro 2026</h2>
                 <div class="text-right">
-                    <div class="text-[8px] font-black uppercase">Registro de Classe 2026</div>
-                    <div class="text-[6px] font-bold text-gray-500 uppercase">Aulas 1-6 | Avaliações 60/40</div>
+                    <div class="text-[8px] font-black uppercase">Registo de Turma 2026</div>
+                    <div id="print-mode-desc" class="text-[6px] font-bold text-gray-500 uppercase">Layout de
+                        Planejamento</div>
                 </div>
             </div>
 
             <!-- Controles do Mês (No-print) -->
             <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-2">
-                <button onclick="changeMonth(-1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">&larr; Anterior</button>
+                <button onclick="changeMonth(-1)"
+                    class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">&larr;
+                    Anterior</button>
                 <h2 id="current-month-label" class="text-xl font-black text-gray-800 capitalize">Fevereiro 2026</h2>
-                <button onclick="changeMonth(1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">Próximo &rarr;</button>
+                <button onclick="changeMonth(1)"
+                    class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">Próximo
+                    &rarr;</button>
             </div>
 
             <!-- Dias da Semana -->
@@ -227,15 +285,14 @@
         </div>
     </main>
 
-    <!-- Estilo Dinâmico para Troca de Orientação -->
     <style id="print-orientation"></style>
 
     <script>
         const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
         const schoolEvents = [
             { date: '2026-01-01', name: 'Ano Novo', type: 'holiday' },
-            { date: '2026-02-02', name: 'Planejamento', type: 'planning' },
-            { date: '2026-02-03', name: 'Planejamento', type: 'planning' },
+            { date: '2026-02-02', name: 'Planeamento', type: 'planning' },
+            { date: '2026-02-03', name: 'Planeamento', type: 'planning' },
             { date: '2026-02-04', name: 'Início 1º Trim', type: 'term' },
             { date: '2026-02-05', name: 'Início Aulas', type: 'term' },
             { date: '2026-02-16', name: 'Recesso', type: 'recess' },
@@ -256,15 +313,38 @@
 
         let blockedDays = new Set();
         let currentState = { year: 2026, month: 1 };
+        let isCleanMode = false;
 
         schoolEvents.forEach(e => {
             if (['holiday', 'recess', 'planning'].includes(e.type)) blockedDays.add(e.date);
         });
 
+        function toggleCleanMode() {
+            isCleanMode = !isCleanMode;
+            const container = document.getElementById('calendar-container');
+            const btn = document.getElementById('clean-toggle');
+            const btnText = document.getElementById('clean-text');
+            const desc = document.getElementById('print-mode-desc');
+
+            if (isCleanMode) {
+                container.classList.add('clean-mode');
+                btn.classList.replace('bg-gray-100', 'bg-orange-100');
+                btn.classList.replace('text-gray-800', 'text-orange-800');
+                btnText.textContent = 'RESTAURAR DETALHES';
+                desc.textContent = 'Layout Minimalista (Apenas Dias)';
+            } else {
+                container.classList.remove('clean-mode');
+                btn.classList.replace('bg-orange-100', 'bg-gray-100');
+                btn.classList.replace('text-orange-800', 'text-gray-800');
+                btnText.textContent = 'MODO APENAS DIAS';
+                desc.textContent = 'Layout de Planejamento';
+            }
+        }
+
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
-            
+
             const label = `${months[currentState.month]} ${currentState.year}`;
             document.getElementById('current-month-label').textContent = label;
             document.getElementById('print-month-label').textContent = label;
@@ -294,22 +374,18 @@
                 if (!isBlocked && !isWeekend) {
                     for (let cardNum = 1; cardNum <= 2; cardNum++) {
                         cellHtml += `
-                            <div class="mt-0.5 border-t border-dotted border-gray-400 pt-0.5 first:border-0 first:mt-0 flex-grow">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex-grow">
-                                        <div class="flex items-end">
-                                            <span class="label-text text-[5px]">PROFESSOR:</span>
-                                            <div class="academic-row flex-grow"></div>
-                                        </div>
-                                        <div class="flex items-end mt-0.5">
-                                            <span class="label-text text-[5px]">DISCIPLINA:</span>
-                                            <div class="academic-row flex-grow"></div>
-                                        </div>
-                                    </div>
-                                    <div class="lesson-dots">
-                                        <div class="lesson-circle">1</div><div class="lesson-circle">2</div><div class="lesson-circle">3</div>
-                                        <div class="lesson-circle">4</div><div class="lesson-circle">5</div><div class="lesson-circle">6</div>
-                                    </div>
+                            <div class="academic-data mt-0.5 border-t border-dotted border-gray-400 pt-1 first:border-0 first:mt-0 flex-grow flex flex-col">
+                                <div class="flex items-end w-full">
+                                    <span class="label-text text-[5.5px]">PROFESSOR:</span>
+                                    <div class="academic-row flex-grow"></div>
+                                </div>
+                                <div class="flex items-end w-full mt-1">
+                                    <span class="label-text text-[5.5px]">DISCIPLINA:</span>
+                                    <div class="academic-row flex-grow"></div>
+                                </div>
+                                <div class="lesson-dots">
+                                    <div class="lesson-circle">1</div><div class="lesson-circle">2</div><div class="lesson-circle">3</div>
+                                    <div class="lesson-circle">4</div><div class="lesson-circle">5</div><div class="lesson-circle">6</div>
                                 </div>
                                 <div class="check-group">
                                     <div class="check-item"><span class="check-box"></span><span class="points-label">AV60</span></div>
@@ -321,7 +397,7 @@
                         `;
                     }
                 } else if (isWeekend) {
-                   cellHtml += `<div class="mt-auto text-center text-[6px] font-black text-gray-400 uppercase">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
+                    cellHtml += `<div class="mt-auto text-center text-[6px] font-black text-gray-400 uppercase no-clean">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
                 }
 
                 cellHtml += `</div>`;
@@ -347,4 +423,5 @@
         window.onload = renderCalendar;
     </script>
 </body>
+
 </html>
