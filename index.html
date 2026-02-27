@@ -33,6 +33,13 @@
             border: 1px solid #000;
             background-color: white;
             position: relative;
+            cursor: pointer;
+            /* Indica que é clicável */
+            transition: background-color 0.2s;
+        }
+
+        .day-cell:hover {
+            background-color: #f8fafc;
         }
 
         .academic-row {
@@ -96,21 +103,25 @@
             font-weight: 900;
         }
 
+        /* Estilo de Bloqueio */
         .day-blocked {
             background-color: #f1f1f1 !important;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.05) 10px, rgba(0, 0, 0, 0.05) 20px);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.05) 10px, rgba(0, 0, 0, 0.05) 20px) !important;
         }
 
         /* Estado "Modo Limpo" */
-        .clean-mode .academic-data,
-        .clean-mode .day-blocked {
+        .clean-mode .academic-data {
             display: none !important;
         }
 
         .clean-mode .day-cell {
-            background-image: none !important;
-            background-color: white !important;
             min-height: 120px;
+        }
+
+        /* No modo limpo, o bloqueio ainda deve ser visível para o professor saber que não pode marcar */
+        .clean-mode .day-blocked {
+            background-color: #f8f8f8 !important;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.03) 10px, rgba(0, 0, 0, 0.03) 20px) !important;
         }
 
         .header-grid {
@@ -124,7 +135,6 @@
             background-color: #f3f4f6;
         }
 
-        /* Configurações Dinâmicas de Impressão */
         @media print {
 
             nav,
@@ -180,11 +190,6 @@
                 background-color: #eee !important;
                 -webkit-print-color-adjust: exact;
             }
-
-            /* Garante que o modo limpo oculte o que deve na impressão */
-            .clean-mode .academic-data {
-                display: none !important;
-            }
         }
     </style>
 </head>
@@ -205,7 +210,6 @@
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <!-- Toggle Modo Limpo -->
                     <button id="clean-toggle" onclick="toggleCleanMode()"
                         class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded-lg text-xs font-bold border border-gray-300 flex items-center gap-2 transition-all">
                         <svg id="clean-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,7 +247,6 @@
         <div id="calendar-container"
             class="calendar-container bg-white shadow-xl border border-gray-200 print:border-0 print:shadow-none">
 
-            <!-- Cabeçalho de Impressão -->
             <div class="hidden print:flex justify-between items-center px-2 py-1 border-b-2 border-black">
                 <div class="flex items-center gap-2">
                     <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png"
@@ -258,7 +261,6 @@
                 </div>
             </div>
 
-            <!-- Controles do Mês (No-print) -->
             <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-2">
                 <button onclick="changeMonth(-1)"
                     class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">&larr;
@@ -269,7 +271,6 @@
                     &rarr;</button>
             </div>
 
-            <!-- Dias da Semana -->
             <div class="header-grid font-bold">
                 <div class="py-1 border-r border-black">DOM</div>
                 <div class="py-1 border-r border-black">SEG</div>
@@ -280,7 +281,6 @@
                 <div class="py-1 border-black">SÁB</div>
             </div>
 
-            <!-- Grid de Dias -->
             <div id="calendar-grid" class="calendar-grid"></div>
         </div>
     </main>
@@ -315,9 +315,19 @@
         let currentState = { year: 2026, month: 1 };
         let isCleanMode = false;
 
+        // Inicializa feriados oficiais como bloqueados
         schoolEvents.forEach(e => {
             if (['holiday', 'recess', 'planning'].includes(e.type)) blockedDays.add(e.date);
         });
+
+        function toggleDayBlock(dateStr) {
+            if (blockedDays.has(dateStr)) {
+                blockedDays.delete(dateStr);
+            } else {
+                blockedDays.add(dateStr);
+            }
+            renderCalendar();
+        }
 
         function toggleCleanMode() {
             isCleanMode = !isCleanMode;
@@ -363,14 +373,16 @@
                 const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
                 const isBlocked = blockedDays.has(dateStr);
 
+                // Adicionamos onclick diretamente na célula
                 let cellHtml = `
-                    <div class="day-cell ${isWeekend ? 'bg-gray-100' : ''} ${isBlocked ? 'day-blocked' : ''}">
+                    <div onclick="toggleDayBlock('${dateStr}')" class="day-cell ${isWeekend ? 'bg-gray-100' : ''} ${isBlocked ? 'day-blocked' : ''}">
                         <div class="flex justify-between items-start mb-0.5">
                             <span class="font-black text-[10px]">${day}</span>
                             ${event ? `<span class="text-[4.5px] font-black text-indigo-700 uppercase leading-none text-right max-w-[70%]">${event.name}</span>` : ''}
                         </div>
                 `;
 
+                // A parte acadêmica só aparece se não estiver bloqueado e não for final de semana
                 if (!isBlocked && !isWeekend) {
                     for (let cardNum = 1; cardNum <= 2; cardNum++) {
                         cellHtml += `
@@ -396,8 +408,6 @@
                             </div>
                         `;
                     }
-                } else if (isWeekend) {
-                    cellHtml += `<div class="mt-auto text-center text-[6px] font-black text-gray-400 uppercase no-clean">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
                 }
 
                 cellHtml += `</div>`;
