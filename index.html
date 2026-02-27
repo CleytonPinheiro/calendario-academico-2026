@@ -25,7 +25,7 @@
         }
         
         .day-cell {
-            min-height: 120px; 
+            min-height: 115px; 
             display: flex;
             flex-direction: column;
             padding: 4px;
@@ -36,7 +36,7 @@
 
         .academic-row {
             border-bottom: 1px solid #000;
-            height: 16px;
+            height: 14px;
             width: 100%;
         }
 
@@ -51,8 +51,8 @@
         .check-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4px;
-            margin-top: 4px;
+            gap: 2px;
+            margin-top: 2px;
         }
 
         .check-item {
@@ -62,16 +62,16 @@
         }
 
         .check-box {
-            border: 1.5px solid #000;
-            width: 10px;
-            height: 10px;
+            border: 1.2px solid #000;
+            width: 9px;
+            height: 9px;
             display: inline-block;
         }
 
         .points-label {
-            font-size: 5.5px;
+            font-size: 5px;
             font-weight: 800;
-            color: #444;
+            color: #333;
         }
 
         .lesson-dots {
@@ -82,11 +82,11 @@
         }
 
         .lesson-circle {
-            border: 1.5px solid #000;
+            border: 1.2px solid #000;
             border-radius: 50%;
-            width: 13px;
-            height: 13px;
-            font-size: 0.65rem;
+            width: 12px;
+            height: 12px;
+            font-size: 0.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,14 +112,15 @@
         @media print {
             @page { 
                 size: A4 landscape; 
-                margin: 5mm; 
+                margin: 4mm; /* Margem mínima absoluta para aproveitar o papel */
             }
             
             nav, .no-print { display: none !important; }
             
             body, html { 
-                height: 100%;
+                height: 100vh;
                 background-color: white; 
+                overflow: hidden;
             }
 
             main { 
@@ -136,13 +137,15 @@
                 box-shadow: none !important; 
                 border-radius: 0 !important;
                 height: 100% !important;
+                width: 100% !important;
                 display: flex;
                 flex-direction: column;
             }
 
+            /* Faz o grid preencher todo o espaço vertical restante */
             #calendar-grid {
-                flex-grow: 1;
-                grid-auto-rows: 1fr; 
+                flex: 1 1 auto;
+                grid-auto-rows: 1fr; /* Força todas as linhas a terem a mesma altura máxima */
             }
 
             .day-cell { 
@@ -168,13 +171,13 @@
                          alt="Logo" class="h-10 w-auto">
                     <div class="flex flex-col">
                         <span class="text-md font-black text-gray-900 leading-tight uppercase">Planejamento 2026</span>
-                        <span class="text-[10px] font-semibold text-indigo-600 tracking-widest uppercase">Campos de Avaliação 60/40</span>
+                        <span class="text-[10px] font-semibold text-indigo-600 tracking-widest uppercase">Ajuste de Margem Mínima</span>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-bold shadow-md flex items-center gap-2 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        IMPRIMIR PAISAGEM
+                        IMPRIMIR (A4 PAISAGEM)
                     </button>
                 </div>
             </div>
@@ -184,23 +187,23 @@
     <main class="flex-grow py-4 w-full px-4 print:px-0 print:py-0">
         <div class="calendar-container bg-white shadow-xl border border-gray-200 print:border-0 print:shadow-none">
             
-            <!-- Cabeçalho de Impressão -->
+            <!-- Cabeçalho de Impressão Compacto -->
             <div class="hidden print:flex justify-between items-center px-2 py-1 border-b-2 border-black">
-                <div class="flex items-center gap-3">
-                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-10 w-auto">
-                    <div class="font-black text-lg uppercase leading-none">C.E. Tânia Varella</div>
+                <div class="flex items-center gap-2">
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-8 w-auto">
+                    <div class="font-black text-base uppercase leading-none">C.E. Tânia Varella</div>
                 </div>
-                <h2 class="font-black text-2xl uppercase" id="print-month-label">Fevereiro 2026</h2>
+                <h2 class="font-black text-xl uppercase" id="print-month-label">Fevereiro 2026</h2>
                 <div class="text-right">
-                    <div class="text-[10px] font-black uppercase">Registro de Classe 2026</div>
-                    <div class="text-[7px] font-bold text-gray-500 uppercase">Aulas 1 a 6 | Avaliações 60/40</div>
+                    <div class="text-[9px] font-black uppercase">Registro de Classe 2026</div>
+                    <div class="text-[6px] font-bold text-gray-500 uppercase">Aulas 1-6 | Avaliações 60/40</div>
                 </div>
             </div>
 
             <!-- Controles do Mês (No-print) -->
-            <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-3">
+            <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-2">
                 <button onclick="changeMonth(-1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">&larr; Anterior</button>
-                <h2 id="current-month-label" class="text-2xl font-black text-gray-800 capitalize">Fevereiro 2026</h2>
+                <h2 id="current-month-label" class="text-xl font-black text-gray-800 capitalize">Fevereiro 2026</h2>
                 <button onclick="changeMonth(1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">Próximo &rarr;</button>
             </div>
 
@@ -275,25 +278,24 @@
 
                 let cellHtml = `
                     <div class="day-cell ${isWeekend ? 'bg-gray-100' : ''} ${isBlocked ? 'day-blocked' : ''}">
-                        <div class="flex justify-between items-start">
-                            <span class="font-black text-sm">${day}</span>
-                            ${event ? `<span class="text-[5.5px] font-black text-indigo-700 uppercase leading-none text-right">${event.name}</span>` : ''}
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="font-black text-xs">${day}</span>
+                            ${event ? `<span class="text-[5px] font-black text-indigo-700 uppercase leading-none text-right max-w-[70%]">${event.name}</span>` : ''}
                         </div>
                 `;
 
                 if (!isBlocked && !isWeekend) {
-                    // DOIS COMPROMISSOS POR DIA
                     for (let cardNum = 1; cardNum <= 2; cardNum++) {
                         cellHtml += `
-                            <div class="mt-2 border-t border-dotted border-gray-400 pt-1 first:border-0 first:mt-1">
+                            <div class="mt-1 border-t border-dotted border-gray-400 pt-0.5 first:border-0 first:mt-0 flex-grow">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-grow">
                                         <div class="flex items-end">
-                                            <span class="label-text">PROF:</span>
+                                            <span class="label-text">P:</span>
                                             <div class="academic-row flex-grow"></div>
                                         </div>
                                         <div class="flex items-end mt-1">
-                                            <span class="label-text">DISC:</span>
+                                            <span class="label-text">D:</span>
                                             <div class="academic-row flex-grow"></div>
                                         </div>
                                     </div>
@@ -303,22 +305,10 @@
                                     </div>
                                 </div>
                                 <div class="check-group">
-                                    <div class="check-item">
-                                        <span class="check-box"></span>
-                                        <span class="points-label">AV (60 pts)</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <span class="check-box"></span>
-                                        <span class="points-label">REC (60 pts)</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <span class="check-box"></span>
-                                        <span class="points-label">AV (40 pts)</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <span class="check-box"></span>
-                                        <span class="points-label">REC (40 pts)</span>
-                                    </div>
+                                    <div class="check-item"><span class="check-box"></span><span class="points-label">AV60</span></div>
+                                    <div class="check-item"><span class="check-box"></span><span class="points-label">R60</span></div>
+                                    <div class="check-item"><span class="check-box"></span><span class="points-label">AV40</span></div>
+                                    <div class="check-item"><span class="check-box"></span><span class="points-label">R40</span></div>
                                 </div>
                             </div>
                         `;
