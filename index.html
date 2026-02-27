@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Planejamento 2026 - Tânia Varella</title>
+    <title>Calendário Base 2026 - C.E. Tânia Varella</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #FAF9F6;
@@ -23,80 +24,26 @@
             border: 2px solid #000;
             flex-grow: 1;
         }
-        
+
         .day-cell {
-            min-height: 100px; 
+            min-height: 120px;
             display: flex;
             flex-direction: column;
-            padding: 4px;
+            padding: 8px;
             border: 1px solid #000;
             background-color: white;
             position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
 
-        .academic-row {
-            border-bottom: 1px solid #000;
-            height: 12px;
-            width: 100%;
-        }
-
-        .label-text {
-            font-size: 6px;
-            font-weight: 900;
-            color: #000;
-            text-transform: uppercase;
-            margin-right: 2px;
-            white-space: nowrap;
-        }
-
-        .check-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px;
-            margin-top: 2px;
-        }
-
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 1.5px;
-        }
-
-        .check-box {
-            border: 1.2px solid #000;
-            width: 8px;
-            height: 8px;
-            display: inline-block;
-        }
-
-        .points-label {
-            font-size: 4.8px;
-            font-weight: 800;
-            color: #333;
-        }
-
-        .lesson-dots {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5px;
-            margin-left: 4px;
-        }
-
-        .lesson-circle {
-            border: 1.2px solid #000;
-            border-radius: 50%;
-            width: 11px;
-            height: 11px;
-            font-size: 0.55rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
+        .day-cell:hover:not(.day-blocked):not(.bg-gray-100) {
+            background-color: #f9fafb;
         }
 
         .day-blocked {
             background-color: #f1f1f1 !important;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.05) 10px, rgba(0, 0, 0, 0.05) 20px);
         }
 
         .header-grid {
@@ -104,7 +51,7 @@
             grid-template-columns: 0.35fr 1fr 1fr 1fr 1fr 1fr 0.35fr;
             text-align: center;
             font-weight: 900;
-            font-size: 10px;
+            font-size: 12px;
             border-x: 2px solid #000;
             border-top: 2px solid #000;
             background-color: #f3f4f6;
@@ -112,26 +59,31 @@
 
         /* Configurações Dinâmicas de Impressão */
         @media print {
-            nav, .no-print { display: none !important; }
-            
-            body, html { 
+
+            nav,
+            .no-print {
+                display: none !important;
+            }
+
+            body,
+            html {
                 height: 100vh;
-                background-color: white; 
+                background-color: white;
                 overflow: hidden;
             }
 
-            main { 
-                padding: 0 !important; 
-                margin: 0 !important; 
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
                 width: 100% !important;
                 height: 100% !important;
                 display: flex;
                 flex-direction: column;
             }
 
-            .calendar-container { 
-                border: none !important; 
-                box-shadow: none !important; 
+            .calendar-container {
+                border: none !important;
+                box-shadow: none !important;
                 border-radius: 0 !important;
                 height: 100% !important;
                 width: 100% !important;
@@ -144,44 +96,60 @@
                 grid-auto-rows: 1fr;
             }
 
-            .day-cell { 
+            .day-cell {
                 height: auto !important;
                 min-height: 0 !important;
-                border: 1px solid #000 !important; 
+                border: 1px solid #000 !important;
                 -webkit-print-color-adjust: exact;
                 page-break-inside: avoid;
             }
 
-            .header-grid { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-            .day-blocked { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-        }
+            .header-grid {
+                background-color: #eee !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-        /* Classes de Orientação */
-        .print-landscape { size: A4 landscape; margin: 4mm; }
-        .print-portrait { size: A4 portrait; margin: 4mm; }
+            .day-blocked {
+                background-color: #eee !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
     </style>
 </head>
+
 <body class="flex flex-col min-h-screen">
 
     <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 no-print shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-4">
-                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" 
-                         alt="Logo" class="h-10 w-auto">
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png"
+                        alt="Logo" class="h-10 w-auto">
                     <div class="flex flex-col">
-                        <span class="text-md font-black text-gray-900 leading-tight uppercase">Planejamento 2026</span>
-                        <span class="text-[10px] font-semibold text-indigo-600 tracking-widest uppercase">Professor & Disciplina Explicitos</span>
+                        <span class="text-md font-black text-gray-900 leading-tight uppercase">Calendário Base
+                            2026</span>
+                        <span class="text-[10px] font-semibold text-gray-500 tracking-widest uppercase">Clique no dia
+                            para bloquear</span>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button onclick="printLayout('landscape')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        IMPRIMIR PAISAGEM
+                    <button onclick="printLayout('landscape')"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                            </path>
+                        </svg>
+                        PAISAGEM
                     </button>
-                    <button onclick="printLayout('portrait')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        IMPRIMIR VERTICAL
+                    <button onclick="printLayout('portrait')"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md flex items-center gap-2 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                            </path>
+                        </svg>
+                        VERTICAL
                     </button>
                 </div>
             </div>
@@ -190,36 +158,41 @@
 
     <main class="flex-grow py-4 w-full px-4 print:px-0 print:py-0">
         <div class="calendar-container bg-white shadow-xl border border-gray-200 print:border-0 print:shadow-none">
-            
+
             <!-- Cabeçalho de Impressão -->
-            <div class="hidden print:flex justify-between items-center px-2 py-1 border-b-2 border-black">
+            <div class="hidden print:flex justify-between items-center px-4 py-2 border-b-2 border-black">
                 <div class="flex items-center gap-2">
-                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png" class="h-8 w-auto">
-                    <div class="font-black text-sm uppercase leading-none">C.E. Tânia Varella</div>
+                    <img src="https://raw.githubusercontent.com/CleytonPinheiro/calendario-academico-2026/main/Logo%20sem%20Fundo.png"
+                        class="h-10 w-auto">
+                    <div class="font-black text-base uppercase leading-none">C.E. Tânia Varella</div>
                 </div>
-                <h2 class="font-black text-lg uppercase" id="print-month-label">Fevereiro 2026</h2>
+                <h2 class="font-black text-xl uppercase" id="print-month-label">Fevereiro 2026</h2>
                 <div class="text-right">
-                    <div class="text-[8px] font-black uppercase">Registro de Classe 2026</div>
-                    <div class="text-[6px] font-bold text-gray-500 uppercase">Aulas 1-6 | Avaliações 60/40</div>
+                    <div class="text-[10px] font-black uppercase">Calendário Escolar</div>
+                    <div class="text-[8px] font-bold text-gray-500 uppercase">Ano Letivo 2026</div>
                 </div>
             </div>
 
             <!-- Controles do Mês (No-print) -->
-            <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-2">
-                <button onclick="changeMonth(-1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">&larr; Anterior</button>
-                <h2 id="current-month-label" class="text-xl font-black text-gray-800 capitalize">Fevereiro 2026</h2>
-                <button onclick="changeMonth(1)" class="p-2 hover:bg-indigo-100 rounded-full transition text-indigo-600 font-bold">Próximo &rarr;</button>
+            <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 no-print px-6 py-4">
+                <button onclick="changeMonth(-1)"
+                    class="px-4 py-2 hover:bg-indigo-100 rounded-lg transition text-indigo-600 font-bold border border-indigo-200">&larr;
+                    Mês Anterior</button>
+                <h2 id="current-month-label" class="text-2xl font-black text-gray-800 capitalize">Fevereiro 2026</h2>
+                <button onclick="changeMonth(1)"
+                    class="px-4 py-2 hover:bg-indigo-100 rounded-lg transition text-indigo-600 font-bold border border-indigo-200">Próximo
+                    Mês &rarr;</button>
             </div>
 
             <!-- Dias da Semana -->
             <div class="header-grid font-bold">
-                <div class="py-1 border-r border-black">DOM</div>
-                <div class="py-1 border-r border-black">SEG</div>
-                <div class="py-1 border-r border-black">TER</div>
-                <div class="py-1 border-r border-black">QUA</div>
-                <div class="py-1 border-r border-black">QUI</div>
-                <div class="py-1 border-r border-black">SEX</div>
-                <div class="py-1 border-black">SÁB</div>
+                <div class="py-2 border-r border-black">DOM</div>
+                <div class="py-2 border-r border-black">SEG</div>
+                <div class="py-2 border-r border-black">TER</div>
+                <div class="py-2 border-r border-black">QUA</div>
+                <div class="py-2 border-r border-black">QUI</div>
+                <div class="py-2 border-r border-black">SEX</div>
+                <div class="py-2 border-black">SÁB</div>
             </div>
 
             <!-- Grid de Dias -->
@@ -227,7 +200,6 @@
         </div>
     </main>
 
-    <!-- Estilo Dinâmico para Troca de Orientação -->
     <style id="print-orientation"></style>
 
     <script>
@@ -236,35 +208,36 @@
             { date: '2026-01-01', name: 'Ano Novo', type: 'holiday' },
             { date: '2026-02-02', name: 'Planejamento', type: 'planning' },
             { date: '2026-02-03', name: 'Planejamento', type: 'planning' },
-            { date: '2026-02-04', name: 'Início 1º Trim', type: 'term' },
-            { date: '2026-02-05', name: 'Início Aulas', type: 'term' },
-            { date: '2026-02-16', name: 'Recesso', type: 'recess' },
             { date: '2026-02-17', name: 'Carnaval', type: 'holiday' },
-            { date: '2026-02-18', name: 'Cinzas', type: 'recess' },
             { date: '2026-04-03', name: 'Paixão', type: 'holiday' },
             { date: '2026-04-21', name: 'Tiradentes', type: 'holiday' },
             { date: '2026-05-01', name: 'Trabalho', type: 'holiday' },
             { date: '2026-06-04', name: 'Corpus Christi', type: 'holiday' },
             { date: '2026-09-07', name: 'Independência', type: 'holiday' },
             { date: '2026-10-12', name: 'Padroeira', type: 'holiday' },
-            { date: '2026-10-13', name: 'Dia Professor', type: 'holiday' },
             { date: '2026-11-02', name: 'Finados', type: 'holiday' },
             { date: '2026-11-15', name: 'Proclamação', type: 'holiday' },
             { date: '2026-11-20', name: 'Consciência Negra', type: 'holiday' },
-            { date: '2026-12-18', name: 'Término Aulas', type: 'term' }
+            { date: '2026-12-25', name: 'Natal', type: 'holiday' }
         ];
 
-        let blockedDays = new Set();
+        // Estado de bloqueio personalizado (dias que o usuário clicou para bloquear)
+        let userBlockedDays = new Set();
         let currentState = { year: 2026, month: 1 };
 
-        schoolEvents.forEach(e => {
-            if (['holiday', 'recess', 'planning'].includes(e.type)) blockedDays.add(e.date);
-        });
+        function toggleDayBlock(dateStr) {
+            if (userBlockedDays.has(dateStr)) {
+                userBlockedDays.delete(dateStr);
+            } else {
+                userBlockedDays.add(dateStr);
+            }
+            renderCalendar();
+        }
 
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
-            
+
             const label = `${months[currentState.month]} ${currentState.year}`;
             document.getElementById('current-month-label').textContent = label;
             document.getElementById('print-month-label').textContent = label;
@@ -272,56 +245,32 @@
             const firstDay = new Date(currentState.year, currentState.month, 1).getDay();
             const daysInMonth = new Date(currentState.year, currentState.month + 1, 0).getDate();
 
+            // Células vazias do mês anterior
             for (let i = 0; i < firstDay; i++) {
                 grid.innerHTML += `<div class="day-cell bg-gray-50 border border-black opacity-30"></div>`;
             }
 
+            // Dias do mês atual
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${currentState.year}-${String(currentState.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayOfWeek = new Date(currentState.year, currentState.month, day).getDay();
                 const event = schoolEvents.find(e => e.date === dateStr);
                 const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-                const isBlocked = blockedDays.has(dateStr);
+
+                // Bloqueado se for feriado oficial OU bloqueado manualmente pelo usuário
+                const isBlocked = event || userBlockedDays.has(dateStr);
 
                 let cellHtml = `
-                    <div class="day-cell ${isWeekend ? 'bg-gray-100' : ''} ${isBlocked ? 'day-blocked' : ''}">
-                        <div class="flex justify-between items-start mb-0.5">
-                            <span class="font-black text-[10px]">${day}</span>
-                            ${event ? `<span class="text-[4.5px] font-black text-indigo-700 uppercase leading-none text-right max-w-[70%]">${event.name}</span>` : ''}
+                    <div class="day-cell ${isWeekend ? 'bg-gray-100' : ''} ${isBlocked ? 'day-blocked' : ''}"
+                         onclick="toggleDayBlock('${dateStr}')">
+                        <div class="flex justify-between items-start">
+                            <span class="font-black text-base">${day}</span>
+                            ${event ? `<span class="text-[7px] font-black text-indigo-700 uppercase leading-none text-right max-w-[80%]">${event.name}</span>` : ''}
                         </div>
                 `;
 
-                if (!isBlocked && !isWeekend) {
-                    for (let cardNum = 1; cardNum <= 2; cardNum++) {
-                        cellHtml += `
-                            <div class="mt-0.5 border-t border-dotted border-gray-400 pt-0.5 first:border-0 first:mt-0 flex-grow">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex-grow">
-                                        <div class="flex items-end">
-                                            <span class="label-text text-[5px]">PROFESSOR:</span>
-                                            <div class="academic-row flex-grow"></div>
-                                        </div>
-                                        <div class="flex items-end mt-0.5">
-                                            <span class="label-text text-[5px]">DISCIPLINA:</span>
-                                            <div class="academic-row flex-grow"></div>
-                                        </div>
-                                    </div>
-                                    <div class="lesson-dots">
-                                        <div class="lesson-circle">1</div><div class="lesson-circle">2</div><div class="lesson-circle">3</div>
-                                        <div class="lesson-circle">4</div><div class="lesson-circle">5</div><div class="lesson-circle">6</div>
-                                    </div>
-                                </div>
-                                <div class="check-group">
-                                    <div class="check-item"><span class="check-box"></span><span class="points-label">AV60</span></div>
-                                    <div class="check-item"><span class="check-box"></span><span class="points-label">R60</span></div>
-                                    <div class="check-item"><span class="check-box"></span><span class="points-label">AV40</span></div>
-                                    <div class="check-item"><span class="check-box"></span><span class="points-label">R40</span></div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } else if (isWeekend) {
-                   cellHtml += `<div class="mt-auto text-center text-[6px] font-black text-gray-400 uppercase">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
+                if (isWeekend) {
+                    cellHtml += `<div class="mt-auto text-center text-[8px] font-black text-gray-400 uppercase">${dayOfWeek === 0 ? 'DOMINGO' : 'SÁBADO'}</div>`;
                 }
 
                 cellHtml += `</div>`;
@@ -341,10 +290,11 @@
             } else {
                 styleTag.innerHTML = '@media print { @page { size: A4 landscape; margin: 4mm; } }';
             }
-            setTimeout(() => window.print(), 100);
+            setTimeout(() => window.print(), 200);
         }
 
         window.onload = renderCalendar;
     </script>
 </body>
+
 </html>
